@@ -1,9 +1,9 @@
 import requests
 import json
-
+import os
 
 # Replace with your actual API key
-AWANLLM_API_KEY = "2e7390a7-7d3a-4a30-8a33-4e28725e1867"
+AWANLLM_API_KEY = os.getenv('AWANLLM_API_KEY')
 
 
 # @app.route("/ask", methods=["POST"])
