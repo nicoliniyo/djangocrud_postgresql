@@ -63,10 +63,10 @@
              {% for task in tasks %}
             <div class="row">
 
-                <div class="col-md-8 ml-auto mr-auto text-left">
-                    <h3 class="title">{{task.id}} - {{task.input_value}}</h3>
+                <div class="col-md-10 ml-auto mr-auto text-left" >
+                    <h3 class="title">{{task.id}} - {{task.input_value|capfirst}}</h3>
                     {% for answer in task.answer_set.all %}
-                        <p class="description">{{ answer.answer_value }}</p>
+                        <p  lang="rtf" class="description">{{ answer.answer_value|linebreaks }}</p>
                     {% endfor %}
                     <div class=" text-right">
                         <form action="{% url 'delete_task' task.id %}" method="POST">
