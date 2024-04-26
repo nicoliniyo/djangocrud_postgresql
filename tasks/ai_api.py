@@ -36,7 +36,7 @@ def send_request(user_input):
 
     response = requests.request("POST", url, headers=headers, data=payload)
     # return response.json()
-    return response.json().get("choices")[0].get("content")
+    return response.json().get("choices")[0].get("message").get("content")
 
 
 # def process_response(response):
