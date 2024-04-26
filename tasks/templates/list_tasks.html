@@ -2,83 +2,147 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>NicolAI</title>
-    <link rel="stylesheet" href="{% static 'main.css' %}" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body class="bg-dark ">
-   <div class="row d-flex justify-content-center">
-     <div class=".padding: 60px 0 0 0">
+    <link rel="stylesheet" href="{% static 'main.css' %}"/>
+    <!--    <link-->
+    <!--      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"-->
+    <!--      rel="stylesheet"-->
+    <!--      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"-->
+    <!--      crossorigin="anonymous"-->
+    <!--    />-->
 
-     </div>
-     <div class="col-10">
-      {{error}}
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static '/css/bootstrap.min.css' %}"/>
+    <!--       <link href="./static/css/bootstrap.min.css" rel="stylesheet" />-->
+    <link rel="stylesheet" href="{% static '/css/paper-kit.css' %}"/>
+    <!--      <link href="./static/" rel="stylesheet" />-->
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="{% static '/demo/demo.css' %}"/>
+    <!--  <link href="./static/demo/demo.css" rel="stylesheet" />-->
+</head>
+<!--  <body class="bg-dark ">-->
+<body class="index-page sidebar-collapse">
+<div class="main">
+    <div class="section section-buttons">
+        <div class="container">
+            <div class="title">
+                <h2>NicolAI Beta</h2>
+            </div>
+            <div class="title">
+                <h3>{{error}}</h3>
+            </div>
+            <div class="row">
 
-      <!-- Create Form -->
-      <form
-        action="{% url 'create_task' %}"
-        method="POST"
-        class="card card-body mb-2"
-      >
-        {% csrf_token %}
+                <div class="col-lg-12">
+                    <div class="input-group">
 
-        <label for="input_value">Realice una pregunta:</label>
-        <input
-          type="text"
-          name="input_value"
-          placeholder="Escriba una pregunta..."
-          class="form-control mb-2"
-          autofocus
-        />
+                        <form action="{% url 'create_task' %}"  method="POST"
+                            class="card card-body mb-2"
+                        >
+                            {% csrf_token %}
+<!--                            <label for="input_value">Realice una pregunta:</label>-->
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    name="input_value"
+                                    placeholder="Escriba una pregunta..."
+                                    autofocus />
+                             <br/>
+                            <button class="btn btn-primary">Enviar</button>
+                        </form>
 
-<!--        <label for="description">Write a description:</label>-->
-<!--        <textarea-->
-<!--          name="description"-->
-<!--          id="description"-->
-<!--          rows="2"-->
-<!--          class="form-control mb-2"-->
-<!--          placeholder="I have to do..."-->
-<!--        ></textarea>-->
-<!--          <div class="col-5 center">-->
-              <button class="btn btn-primary">save</button>
-<!--          </div>-->
+                    </div>
+                </div>
+            </div>
+             {% for task in tasks %}
+            <div class="row">
 
-      </form>
+                <div class="col-md-8 ml-auto mr-auto text-left">
+                    <h3 class="title">{{task.id}} - {{task.input_value}}</h3>
+                    {% for answer in task.answer_set.all %}
+                        <p class="description">{{ answer.answer_value }}</p>
+                    {% endfor %}
+                </div>
+                <div class="col-md-5 ml-auto mr-auto download-area">
+<!--                    <a href="http://www.creative-tim.com/product/paper-kit-2"-->
+<!--                       class="btn btn-danger btn-round">Eliminar</a>-->
+                    <form action="{% url 'delete_task' task.id %}" method="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-danger btn-round">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+                <div class="row">
+                    <div class="col-md-8 ml-auto mr-auto text-left">
+                        <h2 class="title">No hay respuestas</h2>
+                        <p class="description">Esperando a que me hagas una pregunta.</p>
+                    </div>
 
-      <!-- List Tasks -->
-      {% for task in tasks %}
-      <div class="list-group">
-        <div
-          class="card card-body bg-secondary text-light d-flex flex-row justify-content-between mb-2"
-        >
-          <div>
+                </div>
+            {% endfor %}
 
-            <h3 class="h6"><span class="badge rounded-pill bg-info">{{task.id}}</span></h3>
-            <p>{{task.input_value}}</p>
-                {% for answer in task.answer_set.all %}
-                    <p>{{ answer.answer_value }}</p>
-                {% endfor %}
-          </div>
-          <form action="{% url 'delete_task' task.id %}" method="POST">
-            {% csrf_token %}
-            <button class="btn btn-danger">Delete</button>
-          </form>
         </div>
-      </div>
-      {% empty %}
-      <h1 class="text-light">No tasks yet</h1>
-      {% endfor %}
     </div>
+</div>
+</div>
 
-   </div>
-  </body>
+
+<div class="col-10">
+
+    <!-- List Tasks -->
+    {% for task in tasks %}
+    <div class="list-group">
+        <div
+                class="card card-body bg-secondary text-light d-flex flex-row justify-content-between mb-2"
+        >
+            <div>
+
+                <h3 class="h6"><span class="badge rounded-pill bg-info">{{task.id}}</span></h3>
+                <p>{{task.input_value}}</p>
+                {% for answer in task.answer_set.all %}
+                <p>{{ answer.answer_value }}</p>
+                {% endfor %}
+            </div>
+            <form action="{% url 'delete_task' task.id %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+    {% empty %}
+    <h1 class="text-light">No tasks yet</h1>
+    {% endfor %}
+</div>
+<footer class="footer footer-black  footer-white ">
+    <div class="container">
+        <div class="row">
+            <nav class="footer-nav">
+                <ul>
+                    <li>
+                        <a href="https://www.creative-tim.com/license" target="_blank">Licenses</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="credits ml-auto">
+            <span class="copyright">
+              ©
+              <script>
+                document.write(new Date().getFullYear())
+              </script>, made with <i class="fa fa-heart heart"></i> by Creative Tim
+            </span>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+
+
+</body>
 </html>

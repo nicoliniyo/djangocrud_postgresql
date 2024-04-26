@@ -19,15 +19,36 @@ def create_task(request):
         return render(
             request, "list_tasks.html",
             {"tasks": tasks,
-             "error": "Title and description is required"}
+             "error": "No seas timido, introduzce alguna pregunta..."}
         )
     task = Task(input_value=new_input)
     task.save()
-    ai_response = send_request(new_input)
-    answer = Answer(answer_value = ai_response, task = task)
-    answer.save()
-    print(ai_response)
-    return redirect("/tasks/")
+    try:
+        print('SENDING QUERY TO LLM:')
+        ai_response = send_request(new_input)
+        print('LLM RESPONSE:')
+        print(ai_response)
+        if ai_response == "":
+            tasks = Task.objects.all()
+            return render(
+                request, "list_tasks.html",
+                {"tasks": tasks,
+                 "error": "Hubo un error, no pude recolectar la respuesta..."}
+            )
+        answer = Answer(answer_value = ai_response, task = task)
+        answer.save()
+        print(ai_response)
+        return redirect("/tasks/")
+    except (KeyError, ValueError) as e:
+        tasks = Task.objects.all()
+        print(KeyError)
+        print(ValueError)
+        return render(
+            request,
+            "list_tasks.html",
+            {"tasks": tasks, "error": f"Error: {str(e)}"},
+        )
+
 
 
 def delete_task(request, task_id):
