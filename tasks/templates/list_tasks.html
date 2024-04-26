@@ -69,19 +69,11 @@
                         <p class="description">{{ answer.answer_value }}</p>
                     {% endfor %}
                     <div class=" text-right">
-                    <form action="{% url 'delete_task' task.id %}" method="POST">
-                        {% csrf_token %}
-                        <button class="btn btn-danger btn-round">Eliminar</button>
-                    </form>
-                </div>
-                </div>
-                <div class="col-md-5 ml-auto mr-auto download-area">
-<!--                    <a href="http://www.creative-tim.com/product/paper-kit-2"-->
-<!--                       class="btn btn-danger btn-round">Eliminar</a>-->
-                    <form action="{% url 'delete_task' task.id %}" method="POST">
-                        {% csrf_token %}
-                        <button class="btn btn-danger btn-round">Eliminar</button>
-                    </form>
+                        <form action="{% url 'delete_task' task.id %}" method="POST">
+                            {% csrf_token %}
+                            <button class="btn btn-danger btn-round">Eliminar</button>
+                        </form>
+                    </div>
                 </div>
             </div>
             {% empty %}
