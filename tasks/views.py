@@ -1,20 +1,24 @@
 from django.shortcuts import render, redirect
 from .models import Task
 from .models import Answer
-from .constants import default_engine
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.http import HttpResponse
 
 from .ai_api import send_request
+
+
 # Create your views here.
 def list_tasks(request):
     # tasks = Task.objects.all()
-    tasks =  Task.objects.prefetch_related('answer_set')
+    tasks = Task.objects.prefetch_related('answer_set')
     return render(request, "list_tasks.html", {"tasks": tasks})
 
 
 def create_task(request):
     new_input = request.POST["input_value"]
     # new_description = request.POST["description"]
-    if new_input == "" :
+    if new_input == "":
         tasks = Task.objects.all()
         return render(
             request, "list_tasks.html",
@@ -35,7 +39,7 @@ def create_task(request):
                 {"tasks": tasks,
                  "error": "Hubo un error, no pude recolectar la respuesta..."}
             )
-        answer = Answer(answer_value = ai_response, task = task)
+        answer = Answer(answer_value=ai_response, task=task)
         answer.save()
         print(ai_response)
         return redirect("/tasks/")
@@ -50,8 +54,32 @@ def create_task(request):
         )
 
 
-
 def delete_task(request, task_id):
     task = Task.objects.get(id=task_id)
     task.delete()
     return redirect("/tasks/")
+
+
+def home(request):
+    return render(request, 'index.html')
+
+
+def signup(request):
+    if request.method == 'GET':
+        return render(request, 'signup.html', {'form': UserCreationForm})
+    else:
+        if request.POST['password1'] == request.POST['password2']:
+            try:
+                user = User.objects.create_user(username=request.POST['username'],
+                                                password=request.POST['password1'])
+                user.save()
+                return redirect('tasks')
+            except:
+                return render(request, 'signup.html', {
+                    'form': UserCreationForm,
+                    'error': 'Usuario ya existe!'
+                })
+        return render(request, 'signup.html', {
+                    'form': UserCreationForm,
+                    'error': 'Password no son iguales!'
+                })
