@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from .models import Task
 from .models import Answer
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 
@@ -73,6 +74,7 @@ def signup(request):
                 user = User.objects.create_user(username=request.POST['username'],
                                                 password=request.POST['password1'])
                 user.save()
+                login(request, user)
                 return redirect('tasks')
             except:
                 return render(request, 'signup.html', {
@@ -80,6 +82,35 @@ def signup(request):
                     'error': 'Usuario ya existe!'
                 })
         return render(request, 'signup.html', {
-                    'form': UserCreationForm,
-                    'error': 'Password no son iguales!'
-                })
+            'form': UserCreationForm,
+            'error': 'Password no son iguales!'
+        })
+
+
+def base(request):
+    return render(request, 'base.html')
+
+
+def signout(request):
+    logout(request)
+    return redirect('index')
+
+
+def signin(request):
+    if request.method == 'GET':
+        return render(request, 'signin.html',
+                      {
+                          'form': AuthenticationForm
+                      })
+    else:
+        print(request.POST)
+        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+        if user is None:
+            return render(request, 'signin.html',
+                          {
+                              'form': AuthenticationForm,
+                              'error': 'Usuario o contraseña incorrectos'
+                          })
+        else:
+            login(request, user)
+            return redirect('index')
