@@ -16,8 +16,18 @@ def list_tasks(request):
     return render(request, "list_tasks.html", {"tasks": tasks})
 
 
+def list_task_user(request):
+    tasks = Task.objects.filter(created_by=request.user).prefetch_related('answer_set')
+    user_info = request.user
+    print(user_info)
+    return render(request, "list_tasks_user.html", {
+        "tasks": tasks,
+        "user_info" : user_info,
+    })
+
 def create_task(request):
     new_input = request.POST["input_value"]
+    user = request.user
     # new_description = request.POST["description"]
     if new_input == "":
         tasks = Task.objects.all()
@@ -26,7 +36,7 @@ def create_task(request):
             {"tasks": tasks,
              "error": "No seas timido, introduzce alguna pregunta..."}
         )
-    task = Task(input_value=new_input)
+    task = Task(input_value=new_input, created_by=user)
     task.save()
     try:
         print('SENDING QUERY TO LLM:')
