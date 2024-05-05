@@ -13,7 +13,12 @@ from .ai_api import send_request
 def list_tasks(request):
     # tasks = Task.objects.all()
     tasks = Task.objects.prefetch_related('answer_set')
-    return render(request, "list_tasks.html", {"tasks": tasks})
+    user_info = request.user
+    print(user_info)
+    return render(request, "list_tasks.html", {
+        "tasks": tasks,
+        "user_info" : user_info,
+    })
 
 
 def list_task_user(request):
@@ -72,7 +77,10 @@ def delete_task(request, task_id):
 
 
 def home(request):
-    return render(request, 'index.html')
+    user_info = request.user
+    return render(request, 'index.html', {
+          "user_info": user_info,
+    })
 
 
 def signup(request):
