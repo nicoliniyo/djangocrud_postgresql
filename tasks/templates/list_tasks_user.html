@@ -37,6 +37,15 @@
                       <td>{{task.engine}}</td>
                       <td>{{task.input_value|capfirst}}</td>
                     </tr>
+                    <tr>
+                      <td colspan="2"></td>
+                      <td class="text-right">Answers:</td>
+                      <td>
+                        {% for answer in task.answer_set.all %}
+                          <p>{{ answer.answer_value|linebreaks }}</p>
+                        {% endfor %}
+                      </td>
+                    </tr>
                   {% empty %}
                         <div class="row">
                             <div class="col-md-8 ml-auto mr-auto text-left">

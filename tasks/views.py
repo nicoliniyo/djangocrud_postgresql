@@ -4,12 +4,13 @@ from .models import Answer
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 from .ai_api import send_request
 
 
 # Create your views here.
+@login_required
 def list_tasks(request):
     # tasks = Task.objects.all()
     tasks = Task.objects.prefetch_related('answer_set')
@@ -20,7 +21,7 @@ def list_tasks(request):
         "user_info" : user_info,
     })
 
-
+@login_required
 def list_task_user(request):
     tasks = Task.objects.filter(created_by=request.user).prefetch_related('answer_set')
     user_info = request.user
@@ -29,7 +30,7 @@ def list_task_user(request):
         "tasks": tasks,
         "user_info" : user_info,
     })
-
+@login_required
 def create_task(request):
     new_input = request.POST["input_value"]
     user = request.user
@@ -69,7 +70,7 @@ def create_task(request):
             {"tasks": tasks, "error": f"Error: {str(e)}"},
         )
 
-
+@login_required
 def delete_task(request, task_id):
     task = Task.objects.get(id=task_id)
     task.delete()
