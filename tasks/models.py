@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
-from .constants import default_user
 from .constants import default_engine
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Task(models.Model):
@@ -9,17 +9,24 @@ class Task(models.Model):
 
     # Timestamp field with default value of current time
     created_at = models.DateTimeField(default=timezone.now)
-    created_by_user = models.CharField(default=default_user)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     # String field for engine
     engine = models.CharField(max_length=50, default=default_engine)  # Adjust max_length as needed
 
+    def __str__(self):
+        formatted_date = self.created_at.strftime("%Y/%m/%d %H:%M:%S")
+        return f"{self.pk}, {self.input_value}, formatted_date, {self.created_by}, {self.engine}"
 class Answer(models.Model):
     answer_value = models.TextField(blank=False)
 
     # Timestamp field with default value of current time
     created_at = models.DateTimeField(default=timezone.now)
-    created_by_user = models.CharField(default=default_user)
+    # created_by_user = models.ForeignKey(User, on_delete=models.CASCADE)
     # String field for engine
     engine = models.CharField(max_length=50, default=default_engine)  # Adjust max_length as needed
     # Foreign key to Task model
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
+
+    def __str__(self):
+        formatted_date = self.created_at.strftime("%Y/%m/%d %H:%M:%S")
+        return f"{self.pk}, {self.answer_value[:15]}..., {formatted_date}, {self.engine}, {self.task.id}"
