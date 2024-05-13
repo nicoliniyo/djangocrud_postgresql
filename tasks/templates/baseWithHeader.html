@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load git_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,6 +76,9 @@
         <div class="row">
           <nav class="footer-nav">
             <ul>
+              <li>
+                <a href="#" >Ver: {% current_commit_short '.' %}</a>
+              </li>
               <li>
                 <a href="https://www.creative-tim.com/license" target="_blank">Licenses</a>
               </li>
