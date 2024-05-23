@@ -33,23 +33,3 @@ class Answer(models.Model):
         return f"{self.pk}, {self.answer_value[:15]}..., {formatted_date}, {self.engine}, {self.task.id}"
 
 
-class Persona(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    casada = models.CharField(max_length=255)
-    extension = models.CharField(max_length=255)
-    fechanac = models.CharField(max_length=255)
-    genero = models.CharField(max_length=255)
-    materno = models.CharField(max_length=255)
-    nomcompleto = models.CharField(max_length=255)
-    nombres = models.CharField(max_length=255)
-    nrodocumento = models.CharField(max_length=255)
-    nrodocumentochars = models.CharField(max_length=255)
-    nrodocumentoint = models.CharField(max_length=255)
-    paterno = models.CharField(max_length=255)
-    tipodocumento = models.CharField(max_length=255)
-
-
-class PersonaForm(forms.ModelForm):
-    class Meta:
-        model = Persona
-        fields = ('casada', 'extension', 'fechanac', 'genero', 'materno', 'nomcompleto', 'nombres', 'nrodocumento', 'nrodocumentochars', 'nrodocumentoint', 'paterno', 'tipodocumento')
