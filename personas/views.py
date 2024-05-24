@@ -14,7 +14,10 @@ def persona_create(request):
             return redirect('persona_list')
     else:
         form = PersonaForm()
-    return render(request, 'persona_form.html', {'form': form})
+    return render(request, 'persona_form.html',
+                  {'form': form,
+                   'error' : form.errors
+                   })
 
 def persona_update(request, pk):
     persona = Persona.objects.get(pk=pk)
