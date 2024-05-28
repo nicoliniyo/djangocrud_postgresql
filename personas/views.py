@@ -10,9 +10,20 @@ def persona_create(request):
     if request.method == 'POST':
         form = PersonaForm(request.POST)
         if form.is_valid():
+            # cleaned_data = form.cleaned_data
+            # original_datetime = cleaned_data['fechanac']
+            # print('Oroginal')
+            # print(original_datetime)
+            # Convert to the desired format
+            # converted_datetime = original_datetime.strftime('%Y-%m-%d %H:%M:%S%z')
+            #
+            # # Update the form's instance with the converted datetime
+            # form.instance.fechanac = converted_datetime
+            # print(converted_datetime)
             form.save()
             return redirect('persona_list')
         else:
+            print(request.POST)
             print(form.errors)
     else:
         form = PersonaForm()

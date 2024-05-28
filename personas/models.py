@@ -1,11 +1,13 @@
 from django.db import models
 from django import forms
+from django.utils import timezone
 
 class Persona(models.Model):
     id = models.BigAutoField(primary_key=True)
     casada = models.CharField(max_length=255, blank=True)
     extension = models.CharField(max_length=255)
-    fechanac = models.CharField(max_length=255)
+    # fechanac = models.CharField(max_length=255)
+    fechanac = models.DateTimeField(default=timezone.now)
     genero = models.CharField(max_length=255)
     materno = models.CharField(max_length=255)
     nomcompleto = models.CharField(max_length=255)
