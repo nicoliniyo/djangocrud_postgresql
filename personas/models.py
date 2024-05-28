@@ -3,7 +3,7 @@ from django import forms
 
 class Persona(models.Model):
     id = models.BigAutoField(primary_key=True)
-    casada = models.CharField(max_length=255)
+    casada = models.CharField(max_length=255, blank=True)
     extension = models.CharField(max_length=255)
     fechanac = models.CharField(max_length=255)
     genero = models.CharField(max_length=255)

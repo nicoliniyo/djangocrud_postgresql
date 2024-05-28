@@ -12,6 +12,8 @@ def persona_create(request):
         if form.is_valid():
             form.save()
             return redirect('persona_list')
+        else:
+            print(form.errors)
     else:
         form = PersonaForm()
     return render(request, 'persona_form.html',
